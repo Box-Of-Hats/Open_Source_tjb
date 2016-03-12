@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+ 
+{% block content %}
+  <h2>Your Details</h2>
+  <form action="{{ url_for('contact') }}" method=post>
+    {{ form.hidden_tag() }}
+ 
+    {{ form.name.label }}
+    {{ form.name }}
+ 
+    {{ form.username.label }}
+    {{ form.username }}
+ 
+    {{ form.submit }}
+  </form>
+{% endblock %}

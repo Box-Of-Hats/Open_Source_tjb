@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Who Am I</title>    
+  </head>
+  <body>
+   
+    <header>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">;
+
+      <div class="container">
+        <h1 class="logo">Who Am I?.social</h1> <!--The title that appears at the top of the webpage-->
+      </div>
+      <nav>
+        <ol>
+          <li><a href="{{ url_for('home') }}">Home</a></li>
+          <li><a href="{{ url_for('one') }}">One</a></li>
+          <li><a href="{{ url_for('contact') }}">Form</a></li>
+        </ol>
+      </nav>
+    </header> 
+     
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+     
+  </body>
+</html>
