@@ -19,19 +19,23 @@ try:
     with open('blockwords.csv', 'r') as csvfile:
         wordReader = csv.reader(csvfile)
 
-        for word in wordReader:    
+        for word in wordReader:  
             blockedWords.append(word)
 
     blockedWords = blockedWords[0]
+    ex = False
+
+    limit = 10
 
     # start asking Twitter about the timeline
     for tweet in ts.search_tweets_iterable(tuo):
-        print( '@%s tweeted: %s' % ( tweet['user']['screen_name'], tweet['text'] ))
+        #print( '@%s tweeted: %s' % ( tweet['user']['screen_name'], tweet['text'] ))
 
         tweetText = tweet['text']
-
         for x in blockedWords:
-            if str(x).strip() in tweet:
+            break
+            if str(x) in tweetText:
+                ex = True
                 badTweets.append('@%s tweeted: %s' % ( tweet['user']['screen_name'], tweet['text'] ))
 
         try:
@@ -84,6 +88,9 @@ try:
         except KeyError:
             profile_banner_url = 'Unobtainable'
 
+        limit -= 1
+        if limit == 0:
+            break
 
 
     print('Name: ' + name)
@@ -102,6 +109,9 @@ try:
     for t in badTweets:
         print(badTweets)
 
+    print(blockedWords)
+    print(ex)
 
-except TwitterSearchException as e: # catch all those ugly errors
+
+except TwitterSearchException as e:
     print(e)
