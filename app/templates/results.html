@@ -1,9 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
+<div class="bg">
   <div class="jumbo">
-    <h2>Page One<h2>
-    <h3>Welcome to page one, mate<h3>
+    <h1>Results</h1>
+    <h2>{{ form['name']}} </h2>
+      <div>
+        <img class="profile-picture" src='http://pbs.twimg.com/media/BJPB1bvCIAEwtwn.jpg'/>
+        <ol class="extra-details">
+            <li>Birthday: {{ form['dob'] }} </li>
+            <li>Popular Locations: {{ form['locations'] }}</li>
+            <li>Close Friends: {{ form['close_friends'] }} </li>
+        </ol>
+
   </div>
+</div>
   <body>
     <p>This is the body of the page. Im just padding this out for an example. Im just padding this out for an example. Im just padding this out for an example. Im just padding this out for an example. Im just padding this out for an example. Im just padding this out for an example.
     Im just padding this out for an example. Im just padding this out for an example. Im just padding this out for an example.</p>

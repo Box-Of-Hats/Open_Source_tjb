@@ -31,6 +31,18 @@ header h1.logo:hover {
 }
 
 
+ol.extra-details{
+  padding-left: 10%;
+  padding-top: 5%;
+  float: left;
+ 
+}
+
+img.profile-picture {
+  float: left;
+}
+
+
 /*
  * Navigation bar
 */
@@ -50,6 +62,7 @@ nav ol li a{
   text-decoration: none;
   font-style: bold;
 }
+
  
 /*
  * Center the body content
@@ -67,7 +80,18 @@ div.jumbo {
      -moz-border-radius: 6px;
           border-radius: 6px;
 }
- 
+
+div.bg {
+  background-color: #eeeeee;
+}
+
+h1 {
+  font-size: 4.5em;
+  margin-top: 40px;
+  text-align: center;
+  letter-spacing: -2px;
+}
+
 h2 {
   font-size: 3em;
   margin-top: 40px;
@@ -82,4 +106,9 @@ h3 {
   text-align: center;
   letter-spacing: -1px;
   color: #999;
+}
+
+p {
+  clear: both;
+  padding-top: 1%;
 }
