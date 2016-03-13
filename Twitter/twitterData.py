@@ -65,9 +65,10 @@ class twitterData:
 		for eachTweet in self.formattedTweets:
 			tweetText = self.formattedTweets[tweetNum]['text']
 			if self.pickBadTweets(eachTweet, tweetText) == True:
-				print(tweetText)
+				self.badTweets.append(tweetText)
 			tweetNum += 1
 
+		return self.badTweets
 
 	def formatTweets(self, pName, tHandle, msg, ppl, loc, date,):
 		source = 'Twitter'
