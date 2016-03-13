@@ -1,7 +1,9 @@
 from twitterData import *
 
-userData = twitterData('jaydub475')
+userData = twitterData('Rhiannonnnn_')
 
 tweets = userData.Tweets()
 
-print(tweets)
+for tweet in tweets:
+	print(tweet)
+	print()

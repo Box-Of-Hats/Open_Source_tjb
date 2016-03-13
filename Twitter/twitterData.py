@@ -16,10 +16,10 @@ class twitterData:
 			self.tuo = TwitterUserOrder(self.twitterUser)
 
 			self.ts = TwitterSearch(
-				consumer_key = 'yM5VzvXl7YhDOTpiGR6VGy3Kf',
-				consumer_secret = 'mtRmoTKY28XSUU5qdYAWw73YnhFc85zhzOkFpPXDFcccPtL2hs',
-				access_token = '159593120-FzaltKk0wvFUSfR4BQyF2pqr7obQ2Jtr0lDO0uPj',
-				access_token_secret = '0EXUwZOZsJX4wvqjsc6iNTExngxrujZnF6QeCSONkX4xs',
+				consumer_key = '',
+				consumer_secret = '',
+				access_token = '',
+				access_token_secret = '',
 			)
 
 		except TwitterSearchException as e:
