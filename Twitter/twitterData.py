@@ -64,10 +64,10 @@ class twitterData:
 
 		for eachTweet in self.formattedTweets:
 			tweetText = self.formattedTweets[tweetNum]['text']
-			self.pickBadTweets(eachTweet, tweetText)
+			if self.pickBadTweets(eachTweet, tweetText) == True:
+				print(tweetText)
 			tweetNum += 1
 
-		print(self.badTweets)
 
 	def formatTweets(self, pName, tHandle, msg, ppl, loc, date,):
 		source = 'Twitter'
@@ -96,7 +96,7 @@ class twitterData:
 	def pickBadTweets(self, Tweet, tweetText):
 		for x in self.blockedWords:
 			if str(x) in tweetText:
-				self.badTweets.append(Tweet) 
+				return True
 
 	def name(self):
 		finito = False
