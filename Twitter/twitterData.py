@@ -4,87 +4,163 @@ import csv
 
 class twitterData:
 	def __init__(self, twitterUser):
+
+		try:
+			self.tuo = TwitterUserOrder(twitterUser)
+
+			self.ts = TwitterSearch(
+			    consumer_key = 'yVvPHQPI4VkWFyoaxQpkgTd0e',
+			    consumer_secret = 'ZbBVdqC1Hw0Wy7Fabbi4YicTczIF9R6sKLhN7ml2ep4yi4xwhC',
+			    access_token = '51730914-Wf9lj3LaeFPY4XxPm2U8l73LWybcOxBq3rl2N5H5f',
+			    access_token_secret = '7UoeJZJu5nfYKRw8hD4UZh7VMpjeGkeb0OWbt5oZNIojU',
+			)
+
+		except TwitterSearchException as e:
+		    print(e)
+
+		# Variables
 		self.allTweets = []
 		self.mediaTweets = []
 		self.formattedTweets = []
 		self.blockedWords = []
 		self.badTweets = []
 		self.twitterUser = twitterUser
+
+		# Run functions
 		self.addToBlockedWords()
+		self.storeInfo()
 
-		try:
-			self.tuo = TwitterUserOrder(self.twitterUser)
 
-			self.ts = TwitterSearch(
-				consumer_key = '',
-				consumer_secret = '',
-				access_token = '',
-				access_token_secret = '',
-			)
-
-		except TwitterSearchException as e:
-		    print(e)
-
-	def Tweets(self):
+	def storeInfo(self):
 
 		for tweet in self.ts.search_tweets_iterable(self.tuo):
 			try:
-				personalName = tweet['user']['name']
+				self.personalName = tweet['user']['name']
 			except KeyError:
-				personalName = None
+				self.personalName = None
+
+			try: 
+				self.description = tweet['user']['description']
+			except KeyError:
+				self.description = None
 
 			try:
-				twitterHandle = tweet['user']['screen_name']
+				self.twitterHandle = tweet['user']['screen_name']
 			except KeyError:
-				twitterHandle = None
+				self.twitterHandle = None
 
 			try:
-				message = tweet['text']
+				self.message = tweet['text']
 			except KeyError:
-				message = None
+				self.message = None
 
 			try:
-				people = tweet['contibutors']
+				self.people = tweet['contibutors']
 			except KeyError:
-				people = None
+				self.people = None
 
 			try:
-				location = tweet['place']
+				self.location = tweet['place']
 			except KeyError:
-				location = None
+				self.location = None
+
+			try: 
+				self.websiteURL = tweet['user']['entities']['url']['urls'][0]['expanded_url']
+			except KeyError:
+				self.websiteURL = None
+
+			try: 
+				self.profileImageURL = tweet['user']['profile_image_url']
+			except KeyError:
+				self.profileImageURL = None
+
+			try: 
+				self.profileBannerURL = tweet['user']['profile_banner_url']
+			except KeyError:
+				self.profileBannerURL = None
+
+			try: 
+				self.geoEnabled = tweet['user']['geo_enabled']
+			except KeyError:
+				self.geoEnabled = None
+
+			try: 
+				self.createdAt = tweet['user']['created_at']
+			except KeyError:
+				self.createdAt = None
+
+			if self.geoEnabled == True:
+				# find locations
+				pass
+
+			if self.tweetedMedia(tweet) == False:
+				self.tweetType = 'No media included'
+			else:
+				self.tweetType = 'Media included'
 
 			try:
-				date = None
+				self.tweetLink = None
+			except:
+				self.tweetLink = None
+
+			try:
+				self.date = None
 			except KeyError:
-				date = None
+				self.date = None
 
-			self.formatTweets(personalName, twitterHandle, message, people, location, date)
+			toCheck = tweet['user']
 
-		tweetNum = 0
+			self.formatTweets(self.personalName, self.twitterHandle, self.message, self.people, self.location, self.date, self.tweetType, self.tweetLink)
+			self.tweetedMedia(tweet)
 
-		for eachTweet in self.formattedTweets:
-			tweetText = self.formattedTweets[tweetNum]['text']
-			if self.pickBadTweets(eachTweet, tweetText) == True:
-				self.badTweets.append(tweetText)
-			tweetNum += 1
+		print(toCheck)
 
-		return self.badTweets
-
-	def formatTweets(self, pName, tHandle, msg, ppl, loc, date,):
+	def formatTweets(self, pName, tHandle, msg, ppl, loc, date, tType, tLink):
 		source = 'Twitter'
 
 		tweetData = {
 		'source': source,
-		'type': None,
+		'type': tType,
 		'name': pName,
 		'username': tHandle,
 		'text': msg,
 		'date': date,
 		'location': loc,
-		'people': ppl
+		'people': ppl,
+		'tweet link': tLink
 		}
 
 		self.formattedTweets.append(tweetData)
+
+	def getFormattedTweets(self):
+		return self.formattedTweets
+
+	def getName(self):
+		return self.personalName
+
+	def getDescription(self):
+		return self.description
+
+	def getLocation(self):
+		return self.location
+
+	def getTwitterUsername(self):
+		return self.twitterHandle
+
+	def getWebsiteURL(self):
+		return self.websiteURL
+
+	def getProfileImageURL(self):
+		return self.profileImageURL
+
+	def getProfileBannerURL(self):
+		return self.profileBannerURL
+
+	def getCreatedAt(self):
+		return self.createdAt
+
+	def getGeoEnabled(self):
+		return self.geoEnabled
 
 	def addToBlockedWords(self):
 		with open('blockwords.csv', 'r') as csvfile:
@@ -99,119 +175,25 @@ class twitterData:
 			if str(x) in tweetText:
 				return True
 
-	def name(self):
-		finito = False
+	def getBadTweets(self):
+		tweetNum = 0
 
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['name']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
+		for eachTweet in self.formattedTweets:
+			tweetText = self.formattedTweets[tweetNum]['text']
+			if self.pickBadTweets(eachTweet, tweetText) == True:
+				self.badTweets.append(tweetText)
+			tweetNum += 1
 
-
-	def description(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['description']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def location(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['location']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def twitterUsername(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['screen_name']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def websiteURL(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['entities']['url']['urls'][0]['expanded_url']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def profileImageURL(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['profile_image_url']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def profileBannerURL(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['profile_banner_url']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def createdAt(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['created_at']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def geoEnabled(self):
-		finito = False
-
-		while finito == False:
-			for tweet in self.ts.search_tweets_iterable(self.tuo):
-				try: 
-					name = tweet['user']['geo_enabled']
-				except KeyError:
-					name = 'Unobtainable'
-				finito = True
-
-	def tweetLink(self):
-		pass
+		return self.badTweets
 
 	def tweetedMedia(self, tweet):
 		try: 
 			self.mediaTweets.append(tweet['entities']['media'][0]['media_url'])
 		except KeyError:
-			pass
+			return False
 
 	def getMediaTweets(self):
-		mediaTweets = self.mediaTweets
-
-		return mediaTweets
+		return self.mediaTweets
 
 
 
